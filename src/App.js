@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css'
 
 function App() {
@@ -6,6 +6,14 @@ function App() {
   const [todos,setTodos]=useState([]);
   const [toggleSubmit,setToggleSubmit]=useState(true);
   const [isEditItem,setIsEditItem]=useState(null);
+  const [currentDay,setCurrentDay]=useState('')
+
+  useEffect(()=>{
+    const currentDate = new Date();
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    setCurrentDay(daysOfWeek[currentDate.getDay()])
+
+  },[])
 
   const add=()=>{
     setTodos(
@@ -37,29 +45,26 @@ const editItem=(id)=>{
       </div>
       <div className="subHeading">
         <br />
-        <h2>Whoop, it's Wednesday 🌝 ☕ </h2>
+        <h2>Whoop, it's {currentDay} 🌝 ☕ </h2>
       </div>
       <div className="input">
         <input value={todo} onChange={(e)=>setTodo(e.target.value)} type="text" placeholder="🖊️ Add item..." />
-        {console.log(todo)}
         {
           toggleSubmit ? <i onClick={()=>{setTodos([...todos,{id:Date.now(),text:todo,status:false}]);setTodo('')} } className="fas fa-plus"></i> :
           <i className="fa-regular fa-pen-to-square" onClick={()=>add()}></i>
         }
-        {console.log(todos)}
       </div>
       <div className="todos">
         {
-          todos.map((todosObj)=>{
+          todos.map((todosObj,index)=>{
             return (
-              <div className="todo">
+              <div className="todo" key={index}>
           <div className="left">
             <input value={todosObj.status} onChange={(e)=>{setTodos(todos.filter((todosObj2)=>{if(todosObj2.id===todosObj.id){
               todosObj2.status=e.target.checked
             }
             return todosObj2
             }))}} type="checkbox" name="" id="" />
-            {console.log(todosObj.status)}
             <p>{todosObj.text}</p>
           </div>
           <div className="right">
